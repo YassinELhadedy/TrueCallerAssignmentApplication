@@ -24,6 +24,10 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : View
     private val _blogData = MutableLiveData<Resource<String>?>(null)
     val blogData: LiveData<Resource<String>?> = _blogData
 
+
+    private val _tcLoader = MutableLiveData<Boolean>(false)
+    val tcLoader: LiveData<Boolean> = _tcLoader
+
     private val _tc10CharacterReqAnswer = MutableLiveData<String>(null)
     val tc10CharacterReqAnswer: LiveData<String> = _tc10CharacterReqAnswer
 
@@ -33,30 +37,11 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : View
     private val _tcWordCounterReqAnswer = MutableLiveData<String>(null)
     val tcWordCounterReqAnswer: LiveData<String> = _tcWordCounterReqAnswer
 
-//    fun releasedDropDetailInfo(dropGetApiComponent: DropGetApiComponent) = viewModelScope.launch {
-//        _releasedDropData.postValue(Resource.loading(null))
-//        dropRepo.get(dropGetApiComponent)
-//            .catch { e ->
-//                _releasedDropData.postValue(Resource.error(e.message, e))
-//            }.collect {
-//                when (it) {
-//                    is FHReleasedDropDetails -> {
-//                        _releasedDropData.postValue(Resource.success(data = it))
-//                        _fHReleasedDropDetails.postValue(it)
-//                    }
-//                    is FHReleasedDropStyleDetails -> {
-//                        _releasedDropData.postValue(Resource.success(data = it))
-//                        _fHReleasedDropStyleDetails.postValue(it)
-//                    }
-//                    else -> _releasedDropData.postValue(Resource.success(data = it))
-//                }
-//            }
-//    }
-
 
     fun fetchBlogsParallel(apiComponent: BlogGetApiComponent) {
         viewModelScope.launch {
             _blogData.postValue(Resource.loading(null))
+            _tcLoader.postValue(true)
             blogsRepo.get(apiComponent).zip(
                 blogsRepo.get(apiComponent)
                     .zip(blogsRepo.get(apiComponent)) { secondRequestItem, thirdRequestItem ->
@@ -90,9 +75,11 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : View
 
                 "${char10th}$SEPARATOR${secondAndThirdItem}"
             }.catch { e ->
+                _tcLoader.postValue(false)
                 Log.i("dsadsa", e.message!!)
             }
                 .collect {
+                    _tcLoader.postValue(false)
                     val result = it.split(SEPARATOR)
                     _tc10CharacterReqAnswer.postValue(result[0])
                     _tcEvery10CharacterReqAnswer.postValue(result[1])

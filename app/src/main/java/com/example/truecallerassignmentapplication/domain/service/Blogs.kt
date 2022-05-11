@@ -12,8 +12,8 @@ import com.example.truecallerassignmentapplication.infrastructure.Paginator
 import com.example.truecallerassignmentapplication.ui.blog.SEPARATOR
 import com.example.truecallerassignmentapplication.ui.blog.SEPARATOR_DECORATOR
 import com.example.truecallerassignmentapplication.ui.blog.SPACE_SEPARATOR
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 //class FeedAndDrops @Inject constructor(
 //    private val feedRepo: FeedRepo,
@@ -42,14 +42,14 @@ class QuereyBuilder {
 }
 
 
-class Blogs(val blogsRepo: BlogsRepo) {
+class Blogs @Inject constructor(val blogsRepo: BlogsRepo) {
 
-    fun get(pagination: Pagination): Flow<String> =
+    fun getBlogs(pagination: Pagination): Flow<String> =
         Paginator(pagination,
             object : Paginatee<String, QuereyBuilder, BlogDataSource> {
                 val qb = QuereyBuilder()
                 override fun filter(expr: BlogDataSource?): QuereyBuilder {
-                    TODO("Not yet implemented")
+                    return qb
                 }
 
                 override fun andExpr(lhs: BlogDataSource, rhs: BlogDataSource): BlogDataSource =
@@ -79,11 +79,11 @@ class Blogs(val blogsRepo: BlogsRepo) {
                 }
 
                 override fun limit(query: QuereyBuilder, limit: Int): QuereyBuilder {
-                    TODO("Not yet implemented")
+                    return qb
                 }
 
                 override fun offset(query: QuereyBuilder, offset: Int): QuereyBuilder {
-                    TODO("Not yet implemented")
+                    return qb
                 }
 
                 override fun run(query: QuereyBuilder): Flow<String> {
@@ -128,10 +128,10 @@ class Blogs(val blogsRepo: BlogsRepo) {
                         }[0]
 
                         "${char10th}$SEPARATOR${secondAndThirdItem}"
+                    }.map {
+                        it
                     }
                 }
-
-
             }).run()
 
 }
