@@ -1,5 +1,6 @@
 package com.example.truecallerassignmentapplication.ui.blog
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,10 +13,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import javax.inject.Inject
 
-const val SPERATOR = "/**sp**/"
+const val SEPARATOR = "/**sp**/"
+const val SPACE_SEPARATOR = "\\s"
+const val SEPARATOR_DECORATOR = "/--/"
 
 @HiltViewModel
 class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : ViewModel() {
@@ -52,36 +54,46 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : View
 //    }
 
 
-    fun fetchBlogsParreller(apiComponent: BlogGetApiComponent) {
+    fun fetchBlogsParallel(apiComponent: BlogGetApiComponent) {
         viewModelScope.launch {
             _blogData.postValue(Resource.loading(null))
             blogsRepo.get(apiComponent).zip(
                 blogsRepo.get(apiComponent)
-                    .zip(blogsRepo.get(apiComponent)) { secondRequestItem, thridRequestItem ->
+                    .zip(blogsRepo.get(apiComponent)) { secondRequestItem, thirdRequestItem ->
 
-                        val listOfEvery10thChar = secondRequestItem.chunked(10).map {
-                            it[0]
+                        val listOfEvery10thChar = secondRequestItem.chunked(10).mapNotNull {
+                            if (it.length == 10) {
+                                it[9]
+                            } else {
+                                null
+                            }
                         }
 
                         val occurrenceOfEveryUniqueWord =
-                            thridRequestItem.toLowerCase().split(Pattern.compile("\\s+"))
+                            thirdRequestItem.toLowerCase().split(SPACE_SEPARATOR.toRegex())
                                 .groupBy { it }
-                                .map { "${it.key}=${it.value.size}" }.joinToString("/--/")
+                                .map { "${it.key}=${it.value.size}" }.joinToString(SEPARATOR_DECORATOR)
 
 
-                        "${listOfEvery10thChar.joinToString("-")}$SPERATOR${occurrenceOfEveryUniqueWord}"
+                        "${listOfEvery10thChar.joinToString("-")}$SEPARATOR${occurrenceOfEveryUniqueWord}"
 
-                    }) { firstRequestItem, secondAndThridItem ->
+                    }) { firstRequestItem, secondAndThirdItem ->
 
 
-                val char10th = firstRequestItem.chunked(10).map {
-                    it[0]
+                val char10th = firstRequestItem.chunked(10).mapNotNull {
+                    if (it.length == 10) {
+                        it[9]
+                    } else {
+                        null
+                    }
                 }[0]
 
-                "${char10th}$SPERATOR${secondAndThridItem}"
-            }.catch { }
+                "${char10th}$SEPARATOR${secondAndThirdItem}"
+            }.catch { e ->
+                Log.i("dsadsa", e.message!!)
+            }
                 .collect {
-                    val result = it.split(SPERATOR)
+                    val result = it.split(SEPARATOR)
                     _tc10CharacterReqAnswer.postValue(result[0])
                     _tcEvery10CharacterReqAnswer.postValue(result[1])
                     _tcWordCounterReqAnswer.postValue(result[2])

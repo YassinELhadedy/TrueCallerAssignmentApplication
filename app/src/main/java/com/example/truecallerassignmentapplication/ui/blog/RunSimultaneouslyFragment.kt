@@ -21,7 +21,7 @@ class RunSimultaneouslyFragment : BaseFragment<FragmentRunSimultaneouslyBinding>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        blogViewModel.fetchBlogsParreller(
+        blogViewModel.fetchBlogsParallel(
             BlogGetApiComponent(
                 BlogDataSource.GET_TRUE_CALLER_BLOG,
                 null

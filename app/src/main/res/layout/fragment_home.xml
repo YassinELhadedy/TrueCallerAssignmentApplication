@@ -6,9 +6,7 @@
         <import type="android.view.View" />
         <import type="com.example.truecallerassignmentapplication.ui.NavigationJourney" />
 
-        <variable
-            name="viewModel"
-            type="com.example.truecallerassignmentapplication.ui.MainViewModel"/>
+
         <variable
             name="fragment"
             type="com.example.truecallerassignmentapplication.ui.home.HomeFragment"/>

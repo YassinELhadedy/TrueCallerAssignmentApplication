@@ -22,7 +22,4 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
         viewDataBinding.fragment = this@HomeFragment
     }
 
-    fun navigateTo(navigationJourney: NavigationJourney) {
-        mainViewModel.navigationJourney.value = Event(Navigator(navigationJourney))
-    }
 }

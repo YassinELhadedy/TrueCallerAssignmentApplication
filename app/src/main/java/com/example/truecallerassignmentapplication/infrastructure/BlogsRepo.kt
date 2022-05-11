@@ -2,7 +2,11 @@ package com.example.truecallerassignmentapplication.infrastructure
 
 import android.util.ArrayMap
 import com.example.truecallerassignmentapplication.domain.GetRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class BlogsRepo @Inject constructor(private val service: TrueCallerWebService) :
@@ -10,9 +14,14 @@ class BlogsRepo @Inject constructor(private val service: TrueCallerWebService) :
 
     override fun get(apiComponent: BlogGetApiComponent): Flow<String> =
         when (apiComponent.first) {
-            BlogDataSource.GET_TRUE_CALLER_BLOG ->  FlowHandler.flowDataWithErrorHandling {
-                service.getTrueCallerBlogResponse()
-            }
+            BlogDataSource.GET_TRUE_CALLER_BLOG ->
+                flow {
+                    emit( service.getTrueCallerBlogResponse())
+                }.catch { e ->
+                    throw InfrastructureException(e)
+                }.flowOn(Dispatchers.IO)
+
+
             else -> {throw InfrastructureException("API GET-WAY INVALID IN BlogDataSource")}
         }
 }

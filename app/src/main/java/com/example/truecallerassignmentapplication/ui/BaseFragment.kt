@@ -8,13 +8,16 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.truecallerassignmentapplication.ui.util.progress.WaitingDialog
+import com.fashhub.camxviewmlapplication.ui.util.Event
 
 abstract class BaseFragment<T:ViewDataBinding>: Fragment() {
     protected val mWaitingDialog: WaitingDialog by lazy { WaitingDialog(requireActivity()) }
     protected lateinit var viewDataBinding: T
     @get:LayoutRes
     protected abstract val layoutRes: Int
+    private val mainViewModel: MainViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -32,5 +35,8 @@ abstract class BaseFragment<T:ViewDataBinding>: Fragment() {
     protected abstract fun setupViewModel(viewDataBinding: T)
     open fun setupToolBarAndListener() {}
 
+    fun navigateTo(navigationJourney: NavigationJourney) {
+        mainViewModel.navigationJourney.value = Event(Navigator(navigationJourney))
+    }
 
 }
