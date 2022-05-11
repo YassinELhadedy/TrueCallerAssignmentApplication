@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="com.example.truecallerassignmentapplication.ui.NavigationJourney" />
+
+        <variable
+            name="viewModel"
+            type="com.example.truecallerassignmentapplication.ui.MainViewModel"/>
+        <variable
+            name="fragment"
+            type="com.example.truecallerassignmentapplication.ui.home.HomeFragment"/>
+    </data>
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    tools:context="com.example.truecallerassignmentapplication.ui.home.HomeFragment">
+
+    <Button
+        android:id="@+id/butCallBlog"
+        android:layout_width="408dp"
+        android:layout_height="45dp"
+        android:onClick="@{() -> fragment.navigateTo(NavigationJourney.RUN_SIMULTANEOUSLY)}"
+        android:text="Call 3 Requests SIMULTANEOUSLY" />
+    <Button
+        android:id="@+id/butCallBlog2"
+        android:layout_width="408dp"
+        android:layout_height="45dp"
+        android:onClick="@{() ->fragment.navigateTo(NavigationJourney.RUN_SERIES)}"
+        android:text="Call Blog Page"
+       />
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
