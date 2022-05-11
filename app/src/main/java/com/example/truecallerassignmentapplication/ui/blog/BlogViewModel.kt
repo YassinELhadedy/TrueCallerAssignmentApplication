@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.exa.nanashopper.domain.Pagination
+import com.example.truecallerassignmentapplication.domain.service.Blogs
 import com.example.truecallerassignmentapplication.infrastructure.BlogGetApiComponent
 import com.example.truecallerassignmentapplication.infrastructure.BlogsRepo
 import com.example.truecallerassignmentapplication.ui.util.state.Resource
@@ -20,7 +22,7 @@ const val SPACE_SEPARATOR = "\\s"
 const val SEPARATOR_DECORATOR = "/--/"
 
 @HiltViewModel
-class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : ViewModel() {
+class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private val blogService: Blogs) : ViewModel() {
     private val _blogData = MutableLiveData<Resource<String>?>(null)
     val blogData: LiveData<Resource<String>?> = _blogData
 
@@ -87,6 +89,25 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo) : View
                 }
         }
     }
+    fun fetchBlogsParallelSecondApproach(pagination: Pagination) {
+        viewModelScope.launch {
+            _blogData.postValue(Resource.loading(null))
+            _tcLoader.postValue(true)
+            blogService.getBlogs(pagination)
+                .catch { e ->
+                    _tcLoader.postValue(false)
+                    Log.i("dsadsa", e.message!!)
+                }
+                .collect {
+                    _tcLoader.postValue(false)
+                    val result = it.split(SEPARATOR)
+                    _tc10CharacterReqAnswer.postValue(result[0])
+                    _tcEvery10CharacterReqAnswer.postValue(result[1])
+                    _tcWordCounterReqAnswer.postValue(result[2])
+                }
+        }
+    }
+
 
 
 }
