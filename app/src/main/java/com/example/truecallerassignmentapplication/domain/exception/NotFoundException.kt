@@ -1,6 +1,4 @@
-package com.example.truecallerassignmentapplication.domain
-
-import com.example.truecallerassignmentapplication.domain.ModelException
+package com.example.truecallerassignmentapplication.domain.exception
 
 /**
  * Exception throw by the application when a there is a network connection exception.

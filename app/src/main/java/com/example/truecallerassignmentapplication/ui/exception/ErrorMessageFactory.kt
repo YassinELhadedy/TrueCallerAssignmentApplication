@@ -2,8 +2,9 @@ package com.example.truecallerassignmentapplication.ui.exception
 
 import android.content.Context
 import com.example.truecallerassignmentapplication.R
-import com.example.truecallerassignmentapplication.domain.NotFoundException
-import com.example.truecallerassignmentapplication.domain.UnauthorizedException
+import com.example.truecallerassignmentapplication.domain.exception.ModelException
+import com.example.truecallerassignmentapplication.domain.exception.NotFoundException
+import com.example.truecallerassignmentapplication.domain.exception.UnauthorizedException
 import com.example.truecallerassignmentapplication.infrastructure.InfrastructureException
 import com.example.truecallerassignmentapplication.infrastructure.NetworkException
 
@@ -25,7 +26,7 @@ class ErrorMessageFactory {
 
                 is NetworkException -> message = t.cause?.message.toString()
 
-                is InfrastructureException -> message = t.cause?.message.toString()
+                is InfrastructureException, is ModelException -> message = t.cause?.message.toString()
 
             }
             return message

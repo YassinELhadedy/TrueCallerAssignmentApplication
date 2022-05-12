@@ -1,9 +1,8 @@
-package com.example.truecallerassignmentapplication.domain
+package com.example.truecallerassignmentapplication.domain.exception
 
-/**
- * ModelException
- */
-open class ModelException : RuntimeException {
+
+
+class UnauthorizedException : ModelException {
     constructor() : super()
     constructor(message: String?) : super(message)
     constructor(message: String?, cause: Throwable?) : super(message, cause)

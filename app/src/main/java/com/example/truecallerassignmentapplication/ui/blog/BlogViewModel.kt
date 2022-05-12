@@ -48,7 +48,7 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private
                 blogsRepo.get(apiComponent)
                     .zip(blogsRepo.get(apiComponent)) { secondRequestItem, thirdRequestItem ->
 
-                        val listOfEvery10thChar = secondRequestItem.chunked(10).mapNotNull {
+                        val listOfEvery10thChar = secondRequestItem.content.chunked(10).mapNotNull {
                             if (it.length == 10) {
                                 it[9]
                             } else {
@@ -57,7 +57,7 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private
                         }
 
                         val occurrenceOfEveryUniqueWord =
-                            thirdRequestItem.toLowerCase().split(SPACE_SEPARATOR.toRegex())
+                            thirdRequestItem.content.toLowerCase().split(SPACE_SEPARATOR.toRegex())
                                 .groupBy { it }
                                 .map { "${it.key}=${it.value.size}" }.joinToString(SEPARATOR_DECORATOR)
 
@@ -67,7 +67,7 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private
                     }) { firstRequestItem, secondAndThirdItem ->
 
 
-                val char10th = firstRequestItem.chunked(10).mapNotNull {
+                val char10th = firstRequestItem.content.chunked(10).mapNotNull {
                     if (it.length == 10) {
                         it[9]
                     } else {

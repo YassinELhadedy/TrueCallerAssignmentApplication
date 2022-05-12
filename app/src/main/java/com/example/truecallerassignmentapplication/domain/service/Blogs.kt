@@ -1,10 +1,13 @@
 package com.example.truecallerassignmentapplication.domain.service
 
+import android.content.res.Resources
 import com.exa.nanashopper.domain.Condition
 import com.exa.nanashopper.domain.Operator.Equal
 import com.exa.nanashopper.domain.Pagination
 import com.exa.nanashopper.domain.SortBy
 import com.example.truecallerassignmentapplication.domain.Paginatee
+import com.example.truecallerassignmentapplication.domain.exception.NotFoundException
+import com.example.truecallerassignmentapplication.domain.exception.UnauthorizedException
 import com.example.truecallerassignmentapplication.infrastructure.BlogDataSource
 import com.example.truecallerassignmentapplication.infrastructure.BlogGetApiComponent
 import com.example.truecallerassignmentapplication.infrastructure.BlogsRepo
@@ -13,24 +16,8 @@ import com.example.truecallerassignmentapplication.ui.blog.SEPARATOR
 import com.example.truecallerassignmentapplication.ui.blog.SEPARATOR_DECORATOR
 import com.example.truecallerassignmentapplication.ui.blog.SPACE_SEPARATOR
 import kotlinx.coroutines.flow.*
+import retrofit2.HttpException
 import javax.inject.Inject
-
-//class FeedAndDrops @Inject constructor(
-//    private val feedRepo: FeedRepo,
-//    private val dropRepo: DropRepo
-//) {
-////    fun getDrops(
-////        dropGetApiComponent: DropGetApiComponent?,
-////        flagEndPoint: DropGetApiComponent?,
-////    ): Flow<PagingData<Any>> {
-////        return (newFinancialRepo.get(
-////            Pair(
-////                flagEndPoint,
-////                input
-////            )
-////        ) as Flow<PagingData<Any>>).cachedIn(viewModelScope)
-////    }
-//}
 
 class QuereyBuilder {
     val map = mutableListOf<BlogDataSource>()
@@ -98,16 +85,18 @@ class Blogs @Inject constructor(val blogsRepo: BlogsRepo) {
                                 )
                             ) { secondRequestItem, thirdRequestItem ->
 
-                                val listOfEvery10thChar = secondRequestItem.chunked(10).mapNotNull {
-                                    if (it.length == 10) {
-                                        it[9]
-                                    } else {
-                                        null
+                                val listOfEvery10thChar =
+                                    secondRequestItem.content.chunked(10).mapNotNull {
+                                        if (it.length == 10) {
+                                            it[9]
+                                        } else {
+                                            null
+                                        }
                                     }
-                                }
 
                                 val occurrenceOfEveryUniqueWord =
-                                    thirdRequestItem.toLowerCase().split(SPACE_SEPARATOR.toRegex())
+                                    thirdRequestItem.content.toLowerCase()
+                                        .split(SPACE_SEPARATOR.toRegex())
                                         .groupBy { it }
                                         .map { "${it.key}=${it.value.size}" }.joinToString(
                                             SEPARATOR_DECORATOR
@@ -119,7 +108,7 @@ class Blogs @Inject constructor(val blogsRepo: BlogsRepo) {
                             }) { firstRequestItem, secondAndThirdItem ->
 
 
-                        val char10th = firstRequestItem.chunked(10).mapNotNull {
+                        val char10th = firstRequestItem.content.chunked(10).mapNotNull {
                             if (it.length == 10) {
                                 it[9]
                             } else {
@@ -128,10 +117,7 @@ class Blogs @Inject constructor(val blogsRepo: BlogsRepo) {
                         }[0]
 
                         "${char10th}$SEPARATOR${secondAndThirdItem}"
-                    }.map {
-                        it
                     }
                 }
             }).run()
-
 }
