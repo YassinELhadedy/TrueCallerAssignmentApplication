@@ -6,7 +6,7 @@ package com.example.truecallerassignmentapplication.ui.util.state
  *
  * @param <T>
 </T> */
-class Resource<T>(val status: Status, val data: T?, val message: String?) {
+sealed class Resource<T>(val status: Status, val data: T?, val message: String?) {
     override fun equals(o: Any?): Boolean {
         if (this === o) {
             return true
@@ -39,18 +39,11 @@ class Resource<T>(val status: Status, val data: T?, val message: String?) {
                 '}'
     }
 
-    companion object {
-        fun <T> success(data: T?): Resource<T> {
-            return Resource(Status.SUCCESS, data, null)
-        }
+    class Success<T>(data: T?) : Resource<T>(Status.SUCCESS, data, null)
 
-        fun <T> error(msg: String?, data: T?): Resource<T> {
-            return Resource(Status.ERROR, data, msg)
-        }
+    class Error<T>(msg: String?, data: T?) : Resource<T>(Status.ERROR, data, msg)
 
-        fun <T> loading(data: T?): Resource<T> {
-            return Resource(Status.LOADING, data, null)
-        }
-    }
+    class Loading<T>(data: T?) : Resource<T>(Status.LOADING, data, null)
+
 
 }

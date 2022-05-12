@@ -2,6 +2,7 @@ package com.example.truecallerassignmentapplication.ui.blog
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.exa.nanashopper.domain.AndExpr
@@ -12,11 +13,15 @@ import com.example.truecallerassignmentapplication.R
 import com.example.truecallerassignmentapplication.databinding.FragmentRunSimultaneouslySecondApproachBinding
 import com.example.truecallerassignmentapplication.infrastructure.BlogDataSource
 import com.example.truecallerassignmentapplication.ui.BaseFragment
+import com.example.truecallerassignmentapplication.ui.exception.ErrorMessageFactory
+import com.example.truecallerassignmentapplication.ui.util.state.Status
+import com.example.truecallerassignmentapplication.ui.util.state.Status.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RunSimultaneouslySecondApproachFragment : BaseFragment<FragmentRunSimultaneouslySecondApproachBinding>() {
-        private val blogViewModel: BlogSecondApproachViewModel by viewModels()
+class RunSimultaneouslySecondApproachFragment :
+    BaseFragment<FragmentRunSimultaneouslySecondApproachBinding>() {
+    private val blogViewModel: BlogSecondApproachViewModel by viewModels()
 //    private val blogViewModel: BlogViewModel by activityViewModels() //shared view model
 
     override val layoutRes: Int
@@ -41,6 +46,30 @@ class RunSimultaneouslySecondApproachFragment : BaseFragment<FragmentRunSimultan
                 )
             )
         )
+
+        observer()
+    }
+
+    // second approach to manage status
+    private fun observer() {
+        blogViewModel.blogData.observe(viewLifecycleOwner) {
+            when (it?.status) {
+                SUCCESS -> mWaitingDialog.dismissDialog()
+
+                ERROR -> {
+                    mWaitingDialog.dismissDialog()
+                    if (it.data is Throwable) {
+                        Toast.makeText(
+                            requireContext(),
+                            ErrorMessageFactory.create(requireContext(), it.data),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                LOADING -> mWaitingDialog.showDialog()
+
+            }
+        }
     }
 
 }

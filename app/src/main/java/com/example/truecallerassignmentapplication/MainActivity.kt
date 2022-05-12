@@ -1,18 +1,18 @@
 package com.example.truecallerassignmentapplication
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.Navigation
 import com.example.truecallerassignmentapplication.databinding.ActivityMainBinding
 import com.example.truecallerassignmentapplication.ui.MainViewModel
-import com.example.truecallerassignmentapplication.ui.NavigationJourney
-import com.example.truecallerassignmentapplication.ui.NavigationJourney.*
+import com.example.truecallerassignmentapplication.ui.NavigationJourney.RUN_SIMULTANEOUSLY
+import com.example.truecallerassignmentapplication.ui.NavigationJourney.RUN_SIMULTANEOUSLY_SECOND_APPROACH
+import com.example.truecallerassignmentapplication.ui.exception.ErrorMessageFactory
 import com.example.truecallerassignmentapplication.ui.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.navigationJourneyLiveData.observe(this) {
             it?.let {
                 when (it.peekContent().navigationJourney) {
-                    NavigationJourney.RUN_SIMULTANEOUSLY -> openFragment(
+                    RUN_SIMULTANEOUSLY -> openFragment(
                         HomeFragmentDirections.actionHomeFragmentToRunSimultaneouslyFragment()
                     )
-                    NavigationJourney.RUN_SIMULTANEOUSLY_SECOND_APPROACH -> openFragment(
+                    RUN_SIMULTANEOUSLY_SECOND_APPROACH -> openFragment(
                         HomeFragmentDirections.actionHomeFragmentToRunSimultaneouslySecondApproachFragment()
                     )
-                    else -> TODO()
+                    else -> Toast.makeText(this, ErrorMessageFactory.create(this),Toast.LENGTH_SHORT).show()
                 }
             }
         }

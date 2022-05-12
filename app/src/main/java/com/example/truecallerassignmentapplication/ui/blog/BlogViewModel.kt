@@ -23,8 +23,8 @@ const val SEPARATOR_DECORATOR = "/--/"
 
 @HiltViewModel
 class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private val blogService: Blogs) : ViewModel() {
-    private val _blogData = MutableLiveData<Resource<String>?>(null)
-    val blogData: LiveData<Resource<String>?> = _blogData
+    private val _blogData = MutableLiveData<Resource<Any>?>(null)
+    val blogData: LiveData<Resource<Any>?> = _blogData
 
 
     private val _tcLoader = MutableLiveData<Boolean>(false)
@@ -42,7 +42,7 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private
 
     fun fetchBlogsParallel(apiComponent: BlogGetApiComponent) {
         viewModelScope.launch {
-            _blogData.postValue(Resource.loading(null))
+            _blogData.postValue(Resource.Loading(null))
             _tcLoader.postValue(true)
             blogsRepo.get(apiComponent).zip(
                 blogsRepo.get(apiComponent)
@@ -78,11 +78,12 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private
                 "${char10th}$SEPARATOR${secondAndThirdItem}"
             }.catch { e ->
                 _tcLoader.postValue(false)
-                Log.i("dsadsa", e.message!!)
+                _blogData.postValue(Resource.Error(e.message,e))
             }
                 .collect {
                     _tcLoader.postValue(false)
                     val result = it.split(SEPARATOR)
+                    _blogData.postValue(Resource.Success(result))
                     _tc10CharacterReqAnswer.postValue(result[0])
                     _tcEvery10CharacterReqAnswer.postValue(result[1])
                     _tcWordCounterReqAnswer.postValue(result[2])
@@ -91,7 +92,7 @@ class BlogViewModel @Inject constructor(private val blogsRepo: BlogsRepo,private
     }
     fun fetchBlogsParallelSecondApproach(pagination: Pagination) {
         viewModelScope.launch {
-            _blogData.postValue(Resource.loading(null))
+            _blogData.postValue(Resource.Loading(null))
             _tcLoader.postValue(true)
             blogService.getBlogs(pagination)
                 .catch { e ->

@@ -18,8 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BlogSecondApproachViewModel @Inject constructor(private val blogService: Blogs) :
     ViewModel() {
-    private val _blogData = MutableLiveData<Resource<String>?>(null)
-    val blogData: LiveData<Resource<String>?> = _blogData
+    private val _blogData = MutableLiveData<Resource<Any>?>(null)
+    val blogData: LiveData<Resource<Any>?> = _blogData
 
     private val _tcLoader = MutableLiveData<Boolean>(false)
     val tcLoader: LiveData<Boolean> = _tcLoader
@@ -35,12 +35,12 @@ class BlogSecondApproachViewModel @Inject constructor(private val blogService: B
 
     fun fetchBlogsParallelSecondApproach(pagination: Pagination) {
         viewModelScope.launch {
-            _blogData.postValue(Resource.loading(null))
+            _blogData.postValue(Resource.Loading(null))
             _tcLoader.postValue(true)
             blogService.getBlogs(pagination)
-                .catch { e ->
+                .catch { e:Throwable ->
                     _tcLoader.postValue(false)
-                    Log.i("dsadsa", e.message!!)
+                    _blogData.postValue(Resource.Error(e.message,e))
                 }
                 .collect {
                     _tcLoader.postValue(false)
@@ -48,9 +48,8 @@ class BlogSecondApproachViewModel @Inject constructor(private val blogService: B
                     _tc10CharacterReqAnswer.postValue(result[0])
                     _tcEvery10CharacterReqAnswer.postValue(result[1])
                     _tcWordCounterReqAnswer.postValue(result[2])
+                    _blogData.postValue(Resource.Success(result))
                 }
         }
     }
-
-
 }
