@@ -36,7 +36,7 @@ abstract class BaseFragment<T:ViewDataBinding>: Fragment() {
     open fun setupToolBarAndListener() {}
 
     fun navigateTo(navigationJourney: NavigationJourney) {
-        mainViewModel.navigationJourney.value = Event(Navigator(navigationJourney))
+        mainViewModel.postJourney(Navigator(navigationJourney))
     }
 
 }

@@ -33,7 +33,7 @@ class BlogSecondApproachViewModel @Inject constructor(private val blogService: B
     private val _tcWordCounterReqAnswer = MutableLiveData<String>(null)
     val tcWordCounterReqAnswer: LiveData<String> = _tcWordCounterReqAnswer
 
-    fun fetchBlogsParallel(pagination: Pagination) {
+    fun fetchBlogsParallelSecondApproach(pagination: Pagination) {
         viewModelScope.launch {
             _blogData.postValue(Resource.loading(null))
             _tcLoader.postValue(true)

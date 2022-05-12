@@ -16,8 +16,8 @@
             android:id="@+id/action_homeFragment_to_runSimultaneouslyFragment"
             app:destination="@id/runSimultaneouslyFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_runSeriesFragment"
-            app:destination="@id/runSeriesFragment" />
+            android:id="@+id/action_homeFragment_to_runSimultaneouslySecondApproachFragment"
+            app:destination="@id/runSimultaneouslySecondApproachFragment" />
     </fragment>
     <fragment
         android:id="@+id/runSimultaneouslyFragment"
@@ -25,8 +25,8 @@
         android:label="fragment_run_simultaneously"
         tools:layout="@layout/fragment_run_simultaneously" />
     <fragment
-        android:id="@+id/runSeriesFragment"
-        android:name="com.example.truecallerassignmentapplication.ui.blog.RunSeriesFragment"
+        android:id="@+id/runSimultaneouslySecondApproachFragment"
+        android:name="com.example.truecallerassignmentapplication.ui.blog.RunSimultaneouslySecondApproachFragment"
         android:label="fragment_run_series"
-        tools:layout="@layout/fragment_run_series" />
+        tools:layout="@layout/fragment_run_simultaneously_second_approach" />
 </navigation>

@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.truecallerassignmentapplication.ui.blog.BlogViewModel"/>
+            type="com.example.truecallerassignmentapplication.ui.blog.BlogSecondApproachViewModel"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

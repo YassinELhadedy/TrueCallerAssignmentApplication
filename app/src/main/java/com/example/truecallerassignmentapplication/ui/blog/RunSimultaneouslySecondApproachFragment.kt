@@ -3,23 +3,26 @@ package com.example.truecallerassignmentapplication.ui.blog
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.exa.nanashopper.domain.AndExpr
 import com.exa.nanashopper.domain.Condition
 import com.exa.nanashopper.domain.Operator
 import com.exa.nanashopper.domain.Pagination
 import com.example.truecallerassignmentapplication.R
-import com.example.truecallerassignmentapplication.databinding.FragmentRunSeriesBinding
+import com.example.truecallerassignmentapplication.databinding.FragmentRunSimultaneouslySecondApproachBinding
 import com.example.truecallerassignmentapplication.infrastructure.BlogDataSource
 import com.example.truecallerassignmentapplication.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 
-class RunSeriesFragment : BaseFragment<FragmentRunSeriesBinding>() {
-    //    private val blogSecondApproachViewModel: BlogSecondApproachViewModel by activityViewModels()
-    private val blogViewModel: BlogViewModel by activityViewModels() //shared view model
+@AndroidEntryPoint
+class RunSimultaneouslySecondApproachFragment : BaseFragment<FragmentRunSimultaneouslySecondApproachBinding>() {
+        private val blogViewModel: BlogSecondApproachViewModel by viewModels()
+//    private val blogViewModel: BlogViewModel by activityViewModels() //shared view model
 
     override val layoutRes: Int
-        get() = R.layout.fragment_run_series
+        get() = R.layout.fragment_run_simultaneously_second_approach
 
-    override fun setupViewModel(viewDataBinding: FragmentRunSeriesBinding) {
+    override fun setupViewModel(viewDataBinding: FragmentRunSimultaneouslySecondApproachBinding) {
         viewDataBinding.viewModel = blogViewModel
     }
 
