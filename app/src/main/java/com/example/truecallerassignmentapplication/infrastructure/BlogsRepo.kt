@@ -17,7 +17,8 @@ class BlogsRepo @Inject constructor(private val service: TrueCallerWebService) :
 
     override fun get(apiComponent: BlogGetApiComponent): Flow<Blog> =
         when (apiComponent.first) {
-            BlogDataSource.GET_TRUE_CALLER_BLOG ->
+            BlogDataSource.GET_TRUE_CALLER_BLOG, BlogDataSource.GET_FACE_BOOK_BLOG ->//Hint: we add this one also (BlogDataSource.GET_FACE_BOOK_BLOG)
+                                                                                          // for testing using parametrized unit test.
                 flow {
                     emit(TrueCallerBlog(service.getTrueCallerBlogResponse()).toBlog())
                 }.catch { e ->

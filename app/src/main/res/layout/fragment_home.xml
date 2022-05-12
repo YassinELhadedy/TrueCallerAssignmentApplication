@@ -24,13 +24,13 @@
         android:layout_width="408dp"
         android:layout_height="45dp"
         android:onClick="@{() -> fragment.navigateTo(NavigationJourney.RUN_SIMULTANEOUSLY)}"
-        android:text="Call 3 Requests SIMULTANEOUSLY" />
+        android:text="Call 3 Requests Simultaneously" />
     <Button
         android:id="@+id/butCallBlog2"
         android:layout_width="408dp"
         android:layout_height="45dp"
         android:onClick="@{() ->fragment.navigateTo(NavigationJourney.RUN_SIMULTANEOUSLY_SECOND_APPROACH)}"
-        android:text="Call Blog Page"
+        android:text="Call Simultaneously Second Approach"
        />
 
 
